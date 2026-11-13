@@ -1,0 +1,157 @@
+[data-vice-notebook] {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+[data-vice-notebook] .vice-city-registros { margin: 0.3rem 0; }
+
+.vice-city-aviso[hidden] { display: none; }
+
+[data-vice-city] {
+    --vice-fundo: #130e23;
+    --vice-painel: #20152f;
+    --vice-linha: #2b1c3d;
+    --vice-borda: #65457e;
+    --vice-texto: #f7eaff;
+    --vice-suave: #d0bfe2;
+    --vice-rosa: #ff87c9;
+    --vice-ciano: #65f4e4;
+    --vice-sol: #ffb178;
+    color-scheme: dark;
+}
+
+[data-vice-city] .vice-city-aviso {
+    display: inline-block;
+    margin: 0.85rem 0 0.7rem;
+    padding: 0.38rem 0.75rem;
+    border: 1px solid var(--vice-rosa);
+    border-radius: 0.35rem;
+    background: var(--vice-painel);
+    color: var(--vice-ciano);
+    box-shadow: 0 0 1rem #ff63b83d, inset 0 0 0.8rem #ff63b820;
+    font: 600 0.85rem/1.45 "IBM Plex Mono", ui-monospace, monospace;
+}
+
+[data-vice-city] .vice-city-aviso[hidden] { display: none; }
+
+[data-vice-city="artigo"] {
+    --tinta: var(--vice-rosa);
+    --texto: var(--vice-texto);
+    --cinza: var(--vice-suave);
+    --verde: var(--vice-ciano);
+    --fundo: var(--vice-fundo);
+    --borda: var(--vice-borda);
+}
+
+[data-vice-city="artigo"] .cabecalho {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at 82% 100%, #672959 0, transparent 52%),
+        linear-gradient(123deg, #1b112e 36%, #311a4a 100%);
+    border-image: linear-gradient(90deg, var(--vice-ciano), var(--vice-rosa), var(--vice-sol)) 1;
+}
+
+[data-vice-city="artigo"] .cabecalho::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    right: max(6%, calc((100vw - 65rem) / 2));
+    bottom: -6rem;
+    width: clamp(17rem, 34vw, 29rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+        repeating-linear-gradient(0deg, #392044 0 3px, transparent 3px 17px),
+        linear-gradient(180deg, #ffc581 5%, #ff749b 54%, #9e45ed 93%);
+    box-shadow: 0 0 5rem #ff78ab44;
+    pointer-events: none;
+}
+
+[data-vice-city="artigo"] .cabecalho h1 {
+    color: #fff1f8;
+    text-shadow: 0 0 1.25rem #fa64af65;
+}
+
+[data-vice-city="artigo"] .chamada,
+[data-vice-city="artigo"] .barra a {
+    color: var(--vice-ciano);
+}
+
+[data-vice-city="artigo"] :is(.barra, .barra .atalho, .selos span) {
+    border-color: var(--vice-borda);
+}
+
+[data-vice-city="artigo"] :is(.barra .atalho:hover, .pular, .resumo, table, .explorador, select) {
+    background: var(--vice-painel);
+}
+
+[data-vice-city="artigo"] .resumo { border-left-color: var(--vice-rosa); }
+
+[data-vice-city="artigo"] :is(pre, thead th, tbody tr:nth-child(even)) {
+    background: var(--vice-linha);
+}
+
+[data-vice-city="artigo"] select { border-color: var(--vice-borda); }
+[data-vice-city="artigo"] :focus-visible { outline-color: var(--vice-ciano); }
+
+[data-vice-city="notebook"] {
+    --jp-layout-color0: var(--vice-fundo);
+    --jp-layout-color1: var(--vice-painel);
+    --jp-layout-color2: var(--vice-linha);
+    --jp-content-font-color0: var(--vice-texto);
+    --jp-content-font-color1: var(--vice-texto);
+    --jp-content-font-color2: var(--vice-suave);
+    --jp-content-link-color: var(--vice-ciano);
+    background-color: var(--vice-fundo);
+}
+
+[data-vice-city="notebook"] :is(.jp-OutputArea-output, .output, .output_area, [data-vice-notebook]) {
+    background-color: var(--vice-fundo);
+    color: var(--vice-texto);
+}
+
+[data-vice-city="notebook"] [data-vice-notebook] {
+    padding: 0.55rem 0.85rem;
+    border-left: 3px solid var(--vice-rosa);
+    background: linear-gradient(110deg, var(--vice-painel) 43%, #532650 100%);
+}
+
+[data-vice-city="notebook"] [data-vice-notebook]:focus-visible {
+    outline: 2px solid var(--vice-ciano);
+    outline-offset: -2px;
+}
+
+[data-vice-city="notebook"] table.dataframe {
+    background-color: var(--vice-painel);
+    color: var(--vice-texto);
+}
+
+[data-vice-city="notebook"] table.dataframe :is(thead th, tbody th, td) {
+    border-color: var(--vice-borda);
+    color: var(--vice-texto);
+}
+
+[data-vice-city="notebook"] table.dataframe thead th { color: var(--vice-ciano); }
+
+[data-vice-city="notebook"] table.dataframe tbody tr:nth-child(even) {
+    background-color: var(--vice-linha);
+}
+
+[data-vice-city="notebook"] :is(.jp-RenderedMarkdown, .rendered_html) :is(h1, h2, h3) {
+    color: var(--vice-rosa);
+}
+
+[data-vice-city="artigo"] figure img,
+[data-vice-city="notebook"] :is(.jp-RenderedImage, .output_png, .output-image, .output .display) img,
+[data-vice-city="notebook"] img[data-vscode-context] {
+    filter: invert(0.94) hue-rotate(-18deg) saturate(1.65);
+}
+
+@media (max-width: 55rem) {
+    [data-vice-city="artigo"] .cabecalho::before {
+        right: -5rem;
+        opacity: 0.42;
+    }
+}
