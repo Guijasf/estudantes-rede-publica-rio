@@ -1,0 +1,202 @@
+:root {
+    color-scheme: light;
+    --tinta: #15273c;
+    --texto: #28384a;
+    --cinza: #4d5e70;
+    --verde: #12645d;
+    --azul: #0e2a45;
+    --fundo: #f5f7f9;
+    --borda: #d7e0e8;
+    --sans: "Source Sans 3", "Segoe UI", Arial, sans-serif;
+    --serif: "Spectral", Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0;
+    background: var(--fundo);
+    color: var(--texto);
+    font: 1.025rem/1.68 var(--sans);
+}
+a { color: var(--verde); text-underline-offset: 0.16em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid #16877f; outline-offset: 4px; }
+.pular {
+    position: fixed;
+    z-index: 5;
+    left: 1rem;
+    top: 1rem;
+    padding: 0.5rem 0.9rem;
+    transform: translateY(-200%);
+    background: white;
+}
+.pular:focus { transform: translateY(0); }
+.limite { width: min(70rem, calc(100% - 2.8rem)); margin-inline: auto; }
+.cabecalho {
+    background: var(--azul);
+    color: #e0eaf4;
+    padding-block: 1.4rem 2.7rem;
+    border-bottom: 4px solid #3e9a8c;
+}
+.barra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    border-bottom: 1px solid #4a6178;
+    padding-bottom: 1rem;
+    font-size: 0.89rem;
+}
+.barra a { color: #d9f7f0; }
+.barra .atalho {
+    display: inline-block;
+    padding: 0.27rem 0.66rem;
+    border: 1px solid #6f8d9f;
+    border-radius: 0.3rem;
+    text-decoration: none;
+}
+.barra .atalho:hover { background: #25435e; }
+.chamada { margin: 1.75rem 0 0.35rem; color: #a7d9d2; font-weight: 650; }
+h1, h2, h3 { color: var(--tinta); }
+h1 {
+    color: white;
+    font: 700 clamp(2.2rem, 5vw, 3.55rem)/1.09 var(--serif);
+    max-width: 18ch;
+    margin: 0;
+    letter-spacing: -0.025em;
+}
+.subtitulo { margin: 0.9rem 0 1.45rem; font-size: 1.12rem; max-width: 46rem; }
+.credito { margin: 0; color: #e0eaf4; }
+.credito strong { color: white; }
+.selos { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+.selos span {
+    border: 1px solid #628197;
+    padding: 0.14rem 0.6rem;
+    border-radius: 0.35rem;
+    font-size: 0.78rem;
+}
+.pagina {
+    display: grid;
+    grid-template-columns: 13.2rem minmax(0, 1fr);
+    gap: clamp(1.3rem, 4vw, 3.4rem);
+    padding-block: 2.6rem 3.2rem;
+}
+.sumario { align-self: start; position: sticky; top: 1.4rem; }
+.sumario h2 {
+    font: 700 0.95rem/1.4 var(--sans);
+    margin: 0 0 0.6rem;
+}
+.sumario ol { padding-left: 1.15rem; margin: 0; font-size: 0.9rem; }
+.sumario li { margin-bottom: 0.38rem; }
+.sumario a { color: var(--cinza); text-decoration: none; }
+.sumario a:hover { color: var(--verde); text-decoration: underline; }
+article { min-width: 0; }
+section { margin-bottom: 2.75rem; scroll-margin-top: 1rem; }
+section > :last-child { margin-bottom: 0; }
+h2 { font: 700 clamp(1.54rem, 3vw, 2rem)/1.16 var(--serif); margin: 0 0 0.8rem; }
+h3 { font: 700 1.17rem/1.35 var(--sans); margin: 1.7rem 0 0.55rem; }
+p { margin: 0 0 0.95rem; }
+ol, ul { padding-left: 1.4rem; }
+.resumo {
+    background: white;
+    border: 1px solid var(--borda);
+    border-left: 4px solid #267e75;
+    padding: clamp(1rem, 2.8vw, 1.65rem);
+}
+.resumo h2 { font: 700 1.04rem/1.2 var(--sans); letter-spacing: 0.025em; }
+.palavras { font-size: 0.92rem; color: var(--cinza); }
+.perguntas li { padding-left: 0.14rem; margin-bottom: 0.42rem; }
+code { font-size: 0.88em; overflow-wrap: anywhere; }
+pre {
+    background: #eaf0f5;
+    border: 1px solid var(--borda);
+    padding: 0.9rem 1rem;
+    overflow-x: auto;
+    line-height: 1.55;
+}
+pre code { overflow-wrap: normal; }
+figure { margin: 1.1rem 0 1.3rem; }
+figure img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-inline: auto;
+    background: white;
+    border: 1px solid var(--borda);
+}
+figcaption, .nota { margin-top: 0.55rem; color: var(--cinza); font-size: 0.9rem; }
+.dica-rolagem { display: none; }
+.rolagem { max-width: 100%; overflow-x: auto; }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    font-size: 0.93rem;
+    font-variant-numeric: tabular-nums;
+}
+caption {
+    text-align: left;
+    font-weight: 650;
+    padding: 0.2rem 0 0.55rem;
+    background: var(--fundo);
+}
+th, td { padding: 0.48rem 0.65rem; border-bottom: 1px solid var(--borda); }
+thead th { background: #eaf0f5; color: var(--tinta); }
+th:first-child { text-align: left; }
+th:not(:first-child), td { text-align: right; white-space: nowrap; }
+tbody th { font-weight: 600; }
+tbody tr:nth-child(even) { background: #f8fafc; }
+.explorador { margin: 1.2rem 0 0; border: 1px solid var(--borda); background: white; }
+.explorador summary {
+    cursor: pointer;
+    color: var(--tinta);
+    font-weight: 700;
+    padding: 0.85rem 1rem;
+}
+.explorador-corpo { padding: 0 1rem 1rem; }
+.controles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem 1.25rem;
+    margin-bottom: 0.65rem;
+}
+.controles label { display: grid; gap: 0.15rem; font-size: 0.87rem; }
+select {
+    padding: 0.42rem 0.6rem;
+    max-width: 100%;
+    border: 1px solid #92a4b7;
+    border-radius: 0.25rem;
+    background: white;
+    color: var(--tinta);
+    font: inherit;
+}
+.legendas-fair { margin: 0.9rem 0 1.1rem; }
+.legendas-fair dt { font-weight: 700; color: var(--tinta); }
+.legendas-fair dd { margin: 0.1rem 0 0.7rem; }
+.referencias li { margin-bottom: 0.65rem; }
+footer {
+    border-top: 1px solid var(--borda);
+    padding: 1rem 0 1.5rem;
+    color: var(--cinza);
+    font-size: 0.88rem;
+}
+@media (max-width: 55rem) {
+    .pagina { grid-template-columns: minmax(0, 1fr); }
+    .sumario { position: static; border-bottom: 1px solid var(--borda); padding-bottom: 0.9rem; }
+    .sumario ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1.4rem; }
+}
+@media (max-width: 31rem) {
+    .limite { width: calc(100% - 2rem); }
+    .cabecalho { padding-block: 1rem 1.75rem; }
+    .chamada { margin-top: 1.25rem; }
+    .pagina { padding-block: 1.5rem 2rem; }
+    .sumario ol { grid-template-columns: 1fr; }
+    th, td { padding: 0.4rem 0.48rem; }
+    figure img { min-width: 30rem; }
+    .dica-rolagem { display: block; }
+}
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+}

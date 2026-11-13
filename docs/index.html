@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Guilherme Familiar do Amaral">
+    <meta name="description" content="Análise dos estudantes da rede pública do Rio de Janeiro por nível de ensino e Região Administrativa nos Censos de 2000 e 2010.">
+    <meta name="keywords" content="educação pública, Censo Demográfico, regiões administrativas, creche, Rio de Janeiro">
+    <title>Estudantes da rede pública do Rio de Janeiro em 2000 e 2010</title>
+    <link rel="stylesheet" href="assets/artigo.css">
+    <script defer src="assets/comparacoes-regionais.js"></script>
+    <script defer src="assets/artigo.js"></script>
+</head>
+<body>
+    <a class="pular" href="#conteudo">Ir para o artigo</a>
+    <header class="cabecalho">
+        <div class="limite">
+            <div class="barra">
+                <span>Unilasalle-RJ · Sistemas de Informação</span>
+                <a class="atalho" id="repositorio" href="../README.md">Arquivos do projeto</a>
+            </div>
+            <p class="chamada">Linguagem de Programação · 6º período · 2026.2</p>
+            <h1>Estudantes da rede pública do Rio de Janeiro em 2000 e 2010</h1>
+            <p class="subtitulo">Uma comparação por nível de ensino e Região Administrativa</p>
+            <p class="credito"><strong>Guilherme Familiar do Amaral</strong></p>
+            <p class="credito">Orientador <strong>Alexandre Neves Louzada</strong></p>
+            <p class="credito">Centro Universitário La Salle do Rio de Janeiro</p>
+            <div class="selos" aria-label="Metadados">
+                <span>Tabela 892 do Data.Rio</span>
+                <span>Amostras do IBGE</span>
+                <span>Dados CC BY 4.0</span>
+            </div>
+        </div>
+    </header>
+    <main id="conteudo" class="limite pagina">
+        <nav class="sumario" aria-label="Sumário do artigo">
+            <h2>Sumário</h2>
+            <ol>
+                <li><a href="#introducao">Introdução</a></li>
+                <li><a href="#metodologia">Metodologia</a></li>
+                <li><a href="#resultados">Resultados e discussão</a></li>
+                <li><a href="#conclusao">Conclusão</a></li>
+                <li><a href="#fair">Dados e princípios FAIR</a></li>
+                <li><a href="#referencias">Referências</a></li>
+            </ol>
+        </nav>
+        <article>
+            <section class="resumo" aria-labelledby="resumo-titulo">
+                <h2 id="resumo-titulo">Resumo</h2>
+                <p id="resumo-texto">Este estudo examina como o número estimado de estudantes da rede pública no município do Rio de Janeiro mudou entre 2000 e 2010. A análise usa a Tabela 892 do Data.Rio, baseada nas amostras dos Censos Demográficos do IBGE. Um fluxo de processamento em Python organizou as duas abas em formato tabular aberto, preservou o significado de valores indisponíveis e zeros e harmonizou as modalidades de ensino. A comparação territorial incluiu 31 Regiões Administrativas com registros nos dois anos e examinou Penha e Vigário Geral em um recorte complementar. O total municipal passou de 1.004.604 para aproximadamente 1.129.833 estudantes, aumento de 12,5%. Entre os níveis comparáveis, o ensino médio teve o maior ganho absoluto, de cerca de 72.615 estudantes. A estimativa para o ensino fundamental caiu 35.996. O número de estudantes em creche cresceu 118,8% no município, com as maiores altas absolutas em Santa Cruz, Campo Grande e Jacarepaguá entre as regiões comparadas. Os resultados descrevem mudanças nos volumes estimados. Uma avaliação da cobertura escolar exigiria relacionar as estimativas à população nas faixas etárias pertinentes.</p>
+                <p class="palavras"><strong>Palavras-chave</strong> educação pública, Censo Demográfico, regiões administrativas, creche, Rio de Janeiro.</p>
+            </section>
+            <section id="introducao">
+                <h2>1. Introdução</h2>
+                <p>O total de estudantes da rede pública ajuda a descrever a escala do atendimento educacional. A desagregação por nível de ensino e território revela quais componentes aumentaram ou diminuíram entre os dois levantamentos. O recorte municipal permite observar essas mudanças dentro da mesma cidade.</p>
+                <p>A Tabela 892 reúne estimativas de estudantes por nível e modalidade de ensino. Este estudo usa os valores municipais publicados e compara as Regiões Administrativas com dados disponíveis nos dois anos, levando em conta a diferença de recorte entre Penha e Vigário Geral. <a href="#ref-datario">Fonte dos dados</a>.</p>
+                <ol class="perguntas">
+                    <li><strong>RQ1.</strong> Como o número estimado de estudantes da rede pública mudou no município entre 2000 e 2010, por nível de ensino comparável?</li>
+                    <li><strong>RQ2.</strong> Quais Regiões Administrativas tiveram os maiores aumentos e quedas no total de estudantes entre os dois censos?</li>
+                    <li><strong>RQ3.</strong> Em quais Regiões Administrativas se concentrou o crescimento do número estimado de estudantes em creches públicas?</li>
+                </ol>
+            </section>
+            <section id="metodologia">
+                <h2>2. Metodologia e pipeline de dados</h2>
+                <p>A fonte é um arquivo Excel com as abas de 2000 e 2010, produzidas a partir das amostras dos respectivos Censos Demográficos do IBGE. A unidade de observação após a transformação é uma estimativa por ano, território, nível e modalidade de ensino. Os valores decimais de 2010 foram preservados nos cálculos e arredondados para a apresentação. <a href="#ref-datario">Tabela 892</a>.</p>
+                <p>O pipeline lê os cabeçalhos mesclados com pandas e xlrd, normaliza nomes e conserva a posição de origem de cada célula. O marcador <code>...</code> de 2000 gera um valor ausente. O marcador <code>-</code> de 2010 gera zero, conforme a nota da aba. O arquivo tratado é um CSV UTF-8 comprimido com gzip.</p>
+                <pre><code>from src.etl import carregar_tabela, salvar_tabela
+from src.analise import agregar_niveis, comparar_municipio
+
+dados = carregar_tabela()
+salvar_tabela(dados)
+niveis = agregar_niveis(dados)
+variacao_municipal = comparar_municipio(niveis)</code></pre>
+                <p>Nas comparações por nível, a análise soma as modalidades do fundamental e do médio em cada ano. Mestrado e doutorado são agregados em 2010 para corresponder à categoria conjunta de 2000. Pré-vestibular e especialização ficam na base tratada, cada qual com registro em um dos anos. O total municipal vem da linha oficial. Em 2000, a soma dos totais das RAs é 196 estudantes menor que esse total, diferença compatível com a nota da fonte sobre dados amostrais.</p>
+                <p>As abas trazem 32 e 33 RAs. Vigário Geral consta em 2010 como RA própria. Uma publicação municipal com a população do Censo 2000 agrega à RA Penha os quatro bairros identificados como Vigário Geral no Plano Diretor de 2011. Com base nessa diferença de recorte, o ranking usa 31 RAs e a análise complementar testa o agrupamento de Penha e Vigário Geral em 2010. A equivalência territorial desse agrupamento é uma hipótese. <a href="#ref-territorio-2000">Recorte municipal do Censo 2000</a> · <a href="#ref-territorio-2011">Plano Diretor de 2011</a>.</p>
+                <p>A variação absoluta é a estimativa de 2010 menos a de 2000. A variação percentual divide essa diferença pela estimativa de 2000, quando ela é positiva, e multiplica o resultado por 100. As comparações são descritivas.</p>
+            </section>
+            <section id="resultados">
+                <h2>3. Resultados e discussão</h2>
+                <p class="nota dica-rolagem">Deslize os gráficos e as tabelas na horizontal para ver todos os valores.</p>
+                <h3>RQ1. Aumento municipal liderado pelo ensino médio</h3>
+                <p>O total municipal aumentou <strong>12,5%</strong>, cerca de 125,2 mil estudantes. O ensino médio, somadas as modalidades, teve o maior ganho absoluto (+72,6 mil). O fundamental permaneceu como o nível com maior volume em 2010 e registrou a maior queda absoluta (−36,0 mil). A alfabetização de adultos teve a maior alta proporcional (+177,7%), a partir de uma estimativa de 6.091 estudantes em 2000.</p>
+                <figure>
+                    <div class="rolagem" role="region" tabindex="0" aria-label="Gráfico de variação por nível de ensino">
+                        <img src="assets/variacao-niveis.png" alt="Barras de variação entre 2000 e 2010. Ensino médio tem a maior alta e fundamental a maior queda." width="1721" height="848" loading="lazy">
+                    </div>
+                    <figcaption><strong>Figura 1.</strong> Variação absoluta por nível comparável no município. O eixo está em milhares e os rótulos mostram a diferença em estudantes estimados. Fonte Tabela 892.</figcaption>
+                </figure>
+                <div class="rolagem" role="region" tabindex="0" aria-label="Tabela de estimativas municipais">
+                    <table>
+                        <caption>Estimativas municipais por nível de ensino</caption>
+                        <thead><tr><th scope="col">Nível</th><th scope="col">2000</th><th scope="col">2010</th><th scope="col">Diferença</th><th scope="col">Variação</th></tr></thead>
+                        <tbody>
+                            <tr><th scope="row">Total publicado</th><td>1.004.604</td><td>1.129.833</td><td>+125.229</td><td>+12,5%</td></tr>
+                            <tr><th scope="row">Creche</th><td>21.799</td><td>47.706</td><td>+25.907</td><td>+118,8%</td></tr>
+                            <tr><th scope="row">Pré-escola</th><td>65.921</td><td>62.277</td><td>−3.644</td><td>−5,5%</td></tr>
+                            <tr><th scope="row">Classe de alfabetização</th><td>44.782</td><td>67.839</td><td>+23.057</td><td>+51,5%</td></tr>
+                            <tr><th scope="row">Alfabetização de adultos</th><td>6.091</td><td>16.912</td><td>+10.821</td><td>+177,7%</td></tr>
+                            <tr><th scope="row">Ensino fundamental</th><td>613.400</td><td>577.404</td><td>−35.996</td><td>−5,9%</td></tr>
+                            <tr><th scope="row">Ensino médio</th><td>186.467</td><td>259.082</td><td>+72.615</td><td>+38,9%</td></tr>
+                            <tr><th scope="row">Graduação</th><td>54.998</td><td>79.435</td><td>+24.437</td><td>+44,4%</td></tr>
+                            <tr><th scope="row">Mestrado e doutorado</th><td>8.981</td><td>12.104</td><td>+3.123</td><td>+34,8%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="nota">As categorias comparáveis são um subconjunto dos níveis publicados. Os totais e as diferenças foram calculados com os valores de origem e arredondados separadamente.</p>
+
+                <h3>RQ2. Jacarepaguá liderou as altas entre as 31 RAs</h3>
+                <p>Houve aumento no total estimado em 23 RAs e queda em 8. Jacarepaguá (+16.860), Santa Cruz (+14.227) e Barra da Tijuca (+13.480) tiveram os maiores ganhos absolutos. Bangu apresentou a maior redução absoluta (−3.131), seguido de Realengo (−3.097). Em termos percentuais, Barra da Tijuca liderou as altas (+73,7%) e Ilha do Governador teve a maior redução (−8,1%).</p>
+                <figure>
+                    <div class="rolagem" role="region" tabindex="0" aria-label="Gráfico dos maiores aumentos e quedas por região">
+                        <img src="assets/variacao-regioes.png" alt="Jacarepaguá, Santa Cruz, Barra da Tijuca e Maré lideram as altas. Bangu, Realengo, Ilha do Governador e Madureira lideram as quedas." width="1721" height="848" loading="lazy">
+                    </div>
+                    <figcaption><strong>Figura 2.</strong> Quatro maiores aumentos e quatro maiores quedas no total estimado entre as RAs comparadas. Fonte Tabela 892.</figcaption>
+                </figure>
+                <p>A variação mediana foi de +2.334 estudantes. Os 50% centrais ficaram entre −95 e +6.501, o que mostra a dispersão dos resultados regionais. Na análise complementar, Penha em 2000 teve 55.607 estudantes estimados. Em 2010, a soma de Penha e Vigário Geral foi de aproximadamente 65.462 (+17,7% sob a hipótese de cobertura equivalente).</p>
+
+                <h3>RQ3. Crescimento de creche em todas as RAs comparadas</h3>
+                <p>O número estimado de estudantes em creches públicas subiu <strong>118,8%</strong> no município. Entre as 31 RAs, os maiores acréscimos absolutos foram em Santa Cruz (+2.802), Campo Grande (+2.294) e Jacarepaguá (+1.998). Juntas, as três responderam por <strong>29,2%</strong> da soma dos aumentos nas RAs comparadas. Todas as 31 tiveram alta.</p>
+                <figure>
+                    <div class="rolagem" role="region" tabindex="0" aria-label="Gráfico dos maiores aumentos em creche por região">
+                        <img src="assets/variacao-creche.png" alt="Santa Cruz, Campo Grande e Jacarepaguá tiveram os maiores aumentos absolutos de estudantes em creche." width="1721" height="768" loading="lazy">
+                    </div>
+                    <figcaption><strong>Figura 3.</strong> Sete maiores aumentos absolutos em creche. Fonte Tabela 892.</figcaption>
+                </figure>
+                <p>Os aumentos apontam onde o volume estimado de atendimento cresceu mais. A cobertura de creche por RA dependeria também do tamanho da população na faixa etária atendida, que exigiria uma base complementar.</p>
+                <details class="explorador">
+                    <summary>Explorar os dados das 31 RAs</summary>
+                    <div class="explorador-corpo">
+                        <div class="controles">
+                            <label for="indicador">Indicador
+                                <select id="indicador">
+                                    <option value="Total">Total de estudantes</option>
+                                    <option value="Creche">Estudantes em creche</option>
+                                </select>
+                            </label>
+                            <label for="ordem">Ordenar por
+                                <select id="ordem">
+                                    <option value="altas">Maior diferença</option>
+                                    <option value="quedas">Menor diferença</option>
+                                    <option value="percentual">Maior variação percentual</option>
+                                </select>
+                            </label>
+                        </div>
+                        <p id="regioes-resumo" class="nota" aria-live="polite"></p>
+                        <div class="rolagem" role="region" tabindex="0" aria-label="Resultados regionais">
+                            <table aria-label="Estimativas regionais em 2000 e 2010">
+                                <thead><tr><th scope="col">Região Administrativa</th><th scope="col">2000</th><th scope="col">2010</th><th scope="col">Diferença</th><th scope="col">Variação</th></tr></thead>
+                                <tbody id="regioes-dados"></tbody>
+                            </table>
+                        </div>
+                        <noscript><p>Ative o JavaScript para filtrar e ordenar as estimativas por região.</p></noscript>
+                    </div>
+                </details>
+            </section>
+            <section id="conclusao">
+                <h2>4. Conclusão</h2>
+                <p>Entre os dois censos, aumentou o total estimado de estudantes da rede pública do Rio de Janeiro. O ensino médio teve o maior ganho absoluto entre os níveis comparáveis. Jacarepaguá concentrou a maior alta regional no total e Santa Cruz a maior alta em creche. As diferenças entre RAs mostram que a mudança municipal se distribuiu de forma desigual pelo território.</p>
+                <p>A interpretação depende de dois levantamentos amostrais, da classificação dos níveis e da cobertura geográfica. A análise estima volumes e tem alcance descritivo. Um estudo posterior pode incorporar faixas etárias, validar limites das RAs com bases geográficas históricas e estimar intervalos de confiança a partir do desenho amostral.</p>
+            </section>
+            <section id="fair">
+                <h2>5. Disponibilidade dos dados e princípios FAIR</h2>
+                <p>A planilha original está disponível no Data.Rio com licença CC BY 4.0. O pacote do projeto inclui a planilha original, o CSV processado, o dicionário de dados, o notebook e os scripts em Python. <a href="https://www.data.rio/documents/6b99c568d38646bb97dcf2751c501e7f/about">Ficha do Data.Rio</a> · <a href="https://www.arcgis.com/sharing/rest/content/items/6b99c568d38646bb97dcf2751c501e7f/data">Planilha oficial</a>.</p>
+                <dl class="legendas-fair">
+                    <dt>Localizável (Findable)</dt><dd>O README registra autoria, disciplina, palavras-chave, a identificação da Tabela 892 e o endereço de origem.</dd>
+                    <dt>Acessível (Accessible)</dt><dd>A fonte é pública e os scripts leem a cópia original incluída no projeto sem credenciais.</dd>
+                    <dt>Interoperável (Interoperable)</dt><dd>O CSV UTF-8 e o dicionário Markdown registram tipos, unidades, campos e marcadores de origem.</dd>
+                    <dt>Reutilizável (Reusable)</dt><dd>O código está licenciado sob MIT e a atribuição da base CC BY 4.0 está documentada. As dependências de análise têm versões fixadas.</dd>
+                </dl>
+                <p>Com Python 3.12, use os comandos abaixo para clonar o repositório e reproduzir a base processada e as visualizações. No Windows, use <code>.venv\Scripts\python.exe</code> no lugar de <code>.venv/bin/python</code>.</p>
+                <pre><code><span id="clone">git clone URL_DO_REPOSITORIO estudantes-rede-publica-rio</span>
+cd estudantes-rede-publica-rio
+python -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m src.analise</code></pre>
+            </section>
+            <section id="referencias" class="referencias">
+                <h2>6. Referências</h2>
+                <ol>
+                    <li id="ref-datario">RIO DE JANEIRO (Município). <cite>Número de estudantes da rede pública por nível de ensino, segundo as Regiões Administrativas (RA) do Município do Rio de Janeiro, em 2000/2010</cite>. Tabela 892. Data.Rio, 2018. Atualização em 28 set. 2023. Dados das amostras dos Censos Demográficos 2000 e 2010 do IBGE. Acesso em 12 nov. 2026. <a href="https://www.data.rio/documents/6b99c568d38646bb97dcf2751c501e7f/about">Disponível no Data.Rio</a>.</li>
+                    <li id="ref-territorio-2000">RIO DE JANEIRO (Município). Secretaria Municipal de Saúde e Defesa Civil. <cite>Número de óbitos de leptospirose por Áreas de Planejamento, Regiões Administrativas e Bairros, Município do Rio de Janeiro, 1996–2009</cite>. Rio de Janeiro, 2010. Tabela com a distribuição territorial da população do Censo 2000. Acesso em 12 nov. 2026. <a href="https://www.rio.rj.gov.br/dlstatic/10112/413631/DLFE-220680.pdf/1.0">Documento oficial</a>.</li>
+                    <li id="ref-territorio-2011">RIO DE JANEIRO (Município). <cite>Lei Complementar nº 111, de 1º de fevereiro de 2011</cite>. Plano Diretor de Desenvolvimento Urbano Sustentável do Município do Rio de Janeiro. Anexo de Áreas de Planejamento, Regiões Administrativas e bairros. Rio de Janeiro, 2011. Acesso em 12 nov. 2026. <a href="https://www.rio.rj.gov.br/dlstatic/10112/3678296/4353007/PlanoDiretorLC111_2011">Documento oficial</a>.</li>
+                    <li>WILKINSON, Mark D. et al. The FAIR Guiding Principles for scientific data management and stewardship. <cite>Scientific Data</cite>, v. 3, art. 160018, 2016. <a href="https://doi.org/10.1038/sdata.2016.18">DOI 10.1038/sdata.2016.18</a>.</li>
+                    <li>PANDAS DEVELOPMENT TEAM. <cite>pandas documentation</cite>. Acesso em 12 nov. 2026. <a href="https://pandas.pydata.org/docs/">Documentação</a>.</li>
+                    <li>MATPLOTLIB DEVELOPMENT TEAM. <cite>Matplotlib documentation</cite>. Acesso em 12 nov. 2026. <a href="https://matplotlib.org/stable/">Documentação</a>.</li>
+                </ol>
+            </section>
+        </article>
+    </main>
+    <footer><div class="limite">Guilherme Familiar do Amaral · Unilasalle-RJ · 2026.2</div></footer>
+</body>
+</html>
