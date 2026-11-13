@@ -67,9 +67,6 @@
         }
     }, eventos);
 
-    raiz.addEventListener("keyup", (evento) => {
-        if (evento.key === "Shift" && !evento.shiftKey) limparSequencia();
-    }, eventos);
     raiz.addEventListener("focusout", limparSequencia, eventos);
     window.addEventListener("blur", limparSequencia, eventos);
 })();
