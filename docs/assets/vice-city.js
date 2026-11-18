@@ -18,17 +18,24 @@
 
     const eventos = { capture: true, signal: controle.signal };
     const codigo = "iddqd";
+    const autor = [...raiz.querySelectorAll("strong")].find(
+        (elemento) => elemento.textContent.trim() === "Guilherme Familiar do Amaral"
+    );
     const editavel = "input, textarea, select, [contenteditable]:not([contenteditable=false]), .cm-editor, .monaco-editor";
     let progresso = 0;
+    let toques = 0;
+    let ultimoToque = 0;
 
     function limparSequencia() {
         progresso = 0;
+        toques = 0;
+        ultimoToque = 0;
     }
 
     function atualizarAviso() {
         const ativo = raiz.dataset.viceCity === modo;
         aviso.hidden = !ativo;
-        aviso.textContent = ativo ? "VICE CITY · Shift + IDDQD para voltar" : "";
+        aviso.textContent = ativo ? "VICE CITY · 5 toques no nome ou Shift + IDDQD para voltar" : "";
     }
 
     function alternarTema() {
@@ -41,6 +48,20 @@
     }
 
     atualizarAviso();
+
+    if (autor) {
+        autor.style.touchAction = "manipulation";
+        autor.style.userSelect = "none";
+        autor.style.webkitUserSelect = "none";
+        autor.addEventListener("click", (evento) => {
+            toques = evento.timeStamp - ultimoToque <= 650 ? toques + 1 : 1;
+            ultimoToque = evento.timeStamp;
+            if (toques === 5) {
+                limparSequencia();
+                alternarTema();
+            }
+        }, eventos);
+    }
 
     raiz.addEventListener("keydown", (evento) => {
         if (!aviso.isConnected) {
